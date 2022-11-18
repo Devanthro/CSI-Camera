@@ -128,67 +128,73 @@ def gstreamer_pipeline(
 def run_cameras():
     window_title = "Dual CSI Cameras"
     left_camera = CSI_Camera()
-    left_camera.open(
-        gstreamer_pipeline(
-            sensor_id=0,
-            capture_width=1920,
-            capture_height=1080,
-            flip_method=0,
-            display_width=960,
-            display_height=540,
-        )
-    )
-    left_camera.start()
-
     right_camera = CSI_Camera()
-    right_camera.open(
-        gstreamer_pipeline(
-            sensor_id=1,
-            capture_width=1920,
-            capture_height=1080,
-            flip_method=0,
-            display_width=960,
-            display_height=540,
-        )
-    )
-    right_camera.start()
+    left_camera.stop()
+    # left_camera.release()
+    right_camera.stop()
+    # right_camera.release()
+    # left_camera.open(
+    #     gstreamer_pipeline(
+    #         sensor_id=0,
+    #         capture_width=1920,
+    #         capture_height=1080,
+    #         flip_method=0,
+    #         display_width=960,
+    #         display_height=540,
+    #     )
+    # )
+    # left_camera.start()
 
-    if left_camera.video_capture.isOpened() and right_camera.video_capture.isOpened():
+    # right_camera = CSI_Camera()
+    # right_camera.open(
+    #     gstreamer_pipeline(
+    #         sensor_id=1,
+    #         capture_width=1920,
+    #         capture_height=1080,
+    #         flip_method=0,
+    #         display_width=960,
+    #         display_height=540,
+    #     )
+    # )
+    # right_camera.start()
+    
 
-        cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
+    # if left_camera.video_capture.isOpened() and right_camera.video_capture.isOpened():
 
-        try:
-            while True:
-                _, left_image = left_camera.read()
-                _, right_image = right_camera.read()
-                # Use numpy to place images next to each other
-                camera_images = np.hstack((left_image, right_image)) 
-                # Check to see if the user closed the window
-                # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
-                # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
-                if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title, camera_images)
-                else:
-                    break
+    #     cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
 
-                # This also acts as
-                keyCode = cv2.waitKey(30) & 0xFF
-                # Stop the program on the ESC key
-                if keyCode == 27:
-                    break
-        finally:
+    #     try:
+    #         while True:
+    #             _, left_image = left_camera.read()
+    #             _, right_image = right_camera.read()
+    #             # Use numpy to place images next to each other
+    #             camera_images = np.hstack((left_image, right_image)) 
+    #             # Check to see if the user closed the window
+    #             # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
+    #             # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
+    #             if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
+    #                 cv2.imshow(window_title, camera_images)
+    #             else:
+    #                 break
 
-            left_camera.stop()
-            left_camera.release()
-            right_camera.stop()
-            right_camera.release()
-        cv2.destroyAllWindows()
-    else:
-        print("Error: Unable to open both cameras")
-        left_camera.stop()
-        left_camera.release()
-        right_camera.stop()
-        right_camera.release()
+    #             # This also acts as
+    #             keyCode = cv2.waitKey(30) & 0xFF
+    #             # Stop the program on the ESC key
+    #             if keyCode == 27:
+    #                 break
+    #     finally:
+
+    #         left_camera.stop()
+    #         left_camera.release()
+    #         right_camera.stop()
+    #         right_camera.release()
+    #     cv2.destroyAllWindows()
+    # else:
+    #     print("Error: Unable to open both cameras")
+    #     left_camera.stop()
+    #     left_camera.release()
+    #     right_camera.stop()
+    #     right_camera.release()
 
 
 
